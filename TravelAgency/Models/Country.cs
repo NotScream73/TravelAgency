@@ -1,11 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TravelAgency.Models
+namespace TravelAgency.Models;
+
+public class Country
 {
-    public class Country
-    {
-        public int Id { get; set; }
-        [DisplayName("Название")]
-        public string Name { get; set; } = string.Empty;
-    }
+    [Column("id")]
+    public int Id { get; set; }
+    [Column("name")]
+    public string Name { get; set; } = string.Empty;
 }

@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TravelAgency.Models;
 
-namespace TravelAgency.Data
+namespace TravelAgency.Data;
+
+public class ApplicationDbContext : DbContext
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public DbSet<Country> Country { get; set; } = default!;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
-        public DbSet<Country> Country { get; set; } = default!;
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Country>().ToTable("country").HasKey(i => i.Id);
+        modelBuilder.Entity<Country>().Property(i => i.Id).UseIdentityColumn();
     }
 }
