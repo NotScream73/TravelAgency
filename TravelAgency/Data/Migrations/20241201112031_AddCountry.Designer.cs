@@ -10,7 +10,7 @@ using TravelAgency.Data;
 
 namespace TravelAgency.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(DataContext))]
     [Migration("20241201112031_AddCountry")]
     partial class AddCountry
     {

@@ -3,11 +3,11 @@ using TravelAgency.Models;
 
 namespace TravelAgency.Data;
 
-public class ApplicationDbContext : DbContext
+public class DataContext : DbContext
 {
-    public DbSet<Country> Country { get; set; } = default!;
+    public DbSet<Country> Country { get; set; }
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public DataContext(DbContextOptions<DataContext> options)
         : base(options)
     {
     }
