@@ -1,0 +1,22 @@
+﻿@model TravelAgency.ViewModels.Countries.CountryDetailsViewModel
+
+@{
+    ViewData["Title"] = "Подробности страны";
+}
+
+<h1>Подробности страны @Model.Item.Name</h1>
+<hr />
+<div>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(_ => Model.Item.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(_ => Model.Item.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Item.Id">Изменить</a> |
+    <a asp-action="Index">Назад</a>
+</div>
