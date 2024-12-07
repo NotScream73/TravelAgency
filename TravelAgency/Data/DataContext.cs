@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TravelAgency.Models;
 
 namespace TravelAgency.Data;
 
-public class DataContext : DbContext
+public class DataContext : IdentityDbContext<User>
 {
     public DbSet<Country> Countries { get; set; } = null!;
     public DbSet<Resort> Resorts { get; set; } = null!;
@@ -13,13 +14,14 @@ public class DataContext : DbContext
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        modelBuilder.Entity<Country>().ToTable("country").HasKey(i => i.Id);
-        modelBuilder.Entity<Country>().Property(i => i.Id).UseIdentityColumn();
+        base.OnModelCreating(builder);
+        builder.Entity<Country>().ToTable("country").HasKey(i => i.Id);
+        builder.Entity<Country>().Property(i => i.Id).UseIdentityColumn();
 
-        modelBuilder.Entity<Resort>().ToTable("resort").HasKey(i => i.Id);
-        modelBuilder.Entity<Resort>().Property(i => i.Id).UseIdentityColumn();
-        modelBuilder.Entity<Resort>().HasIndex(i => i.Name).IsUnique();
+        builder.Entity<Resort>().ToTable("resort").HasKey(i => i.Id);
+        builder.Entity<Resort>().Property(i => i.Id).UseIdentityColumn();
+        builder.Entity<Resort>().HasIndex(i => i.Name).IsUnique();
     }
 }
