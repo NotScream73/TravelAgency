@@ -1,77 +1,111 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using TravelAgency.Data;
 using TravelAgency.Models;
+using TravelAgency.Models.DTO;
+using TravelAgency.ViewModels.Countries;
 
 namespace TravelAgency.Services
 {
     public class CountryService
     {
-        private readonly DataContext _context;
+        private readonly DataContext _dataContext;
+        private readonly IMapper _mapper;
 
-        public CountryService(DataContext context)
+        public CountryService(DataContext dataContext, IMapper mapper)
         {
-            _context = context;
+            _dataContext = dataContext;
+            _mapper = mapper;
         }
 
-        public async Task<List<Country>> GetAllCountriesAsync()
+        public async Task<(List<CountryListDTO> list, int totalCount)> GetAllAsync(CountryIndexFilterViewModel filter)
         {
-            return await _context.Countries.ToListAsync();
-        }
+            var query =
+                _dataContext.Countries
+                    .ProjectTo<CountryListDTO>(_mapper.ConfigurationProvider);
 
-        public async Task<Country?> GetCountryByIdAsync(int id)
-        {
-            return await _context.Countries.FirstOrDefaultAsync(c => c.Id == id);
-        }
-
-        public async Task<bool> CreateCountryAsync(Country country)
-        {
-            try
+            if (!string.IsNullOrEmpty(filter.Name))
             {
-                _context.Add(country);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> UpdateCountryAsync(Country country)
-        {
-            try
-            {
-                _context.Update(country);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await CountryExistsAsync(country.Id))
-                {
-                    return false;
-                }
-                throw;
-            }
-        }
-
-        public async Task<bool> DeleteCountryAsync(int id)
-        {
-            var country = await _context.Countries.FindAsync(id);
-            if (country == null)
-            {
-                return false;
+                query = query.Where(q => EF.Functions.Like(q.Name.ToLower(), '%' + filter.Name.ToLower() + '%'));
             }
 
-            _context.Countries.Remove(country);
-            await _context.SaveChangesAsync();
-            return true;
+            var totalCount = query.Count();
+
+            query = query
+                .Skip(filter.Page * filter.Size)
+                .Take(filter.Size);
+
+            return (await query.ToListAsync(), totalCount);
         }
 
-        private async Task<bool> CountryExistsAsync(int id)
+        public async Task<CountryDetailsDTO> GetByIdAsync(int id)
         {
-            return await _context.Countries.AnyAsync(c => c.Id == id);
+            var Country = await _dataContext.Countries.ProjectTo<CountryDetailsDTO>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(i => i.Id == id);
+
+            if (Country == null) throw new Exception("Страна не найдена");
+
+            return Country;
+        }
+
+        public CountryCreateDTO GetForCreate()
+        {
+            return new CountryCreateDTO();
+        }
+
+        public async Task<CountryEditDTO> GetForEditAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new Exception("Страна не найдена");
+            }
+
+            var Country = await _dataContext.Countries.ProjectTo<CountryEditDTO>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(r => r.Id == id);
+
+            if (Country == null) throw new Exception("Страна не найдена");
+
+            return Country;
+        }
+
+        public async Task<CountryDeleteDTO> GetForDeleteAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new Exception("Страна не найдена");
+            }
+
+            var Country = await _dataContext.Countries.ProjectTo<CountryDeleteDTO>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(r => r.Id == id);
+
+            if (Country == null) throw new Exception("Страна не найдена");
+
+            return Country;
+        }
+
+        public async Task CreateAsync(CountryCreateDTO CountryDto)
+        {
+            var Country = _mapper.Map<Country>(CountryDto);
+
+            await _dataContext.Countries.AddAsync(Country);
+            await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(CountryEditDTO CountryDto)
+        {
+            var Country = await _dataContext.Countries.FirstOrDefaultAsync(r => r.Id == CountryDto.Id);
+            if (Country == null) throw new Exception("Страна не найдена");
+
+            _mapper.Map(CountryDto, Country);
+
+            await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var Country = await _dataContext.Countries.FirstOrDefaultAsync(r => r.Id == id);
+            if (Country == null) throw new Exception("Страна не найдена");
+
+            _dataContext.Countries.Remove(Country);
+            await _dataContext.SaveChangesAsync();
         }
     }
-
 }

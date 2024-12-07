@@ -5,10 +5,10 @@ namespace TravelAgency.ViewModels.Resorts;
 public class ResortIndexViewModel
 {
     public ResortIndexFilterViewModel Filter { get; }
-    public List<ResortListDTO> ResortList { get; }
-    public ResortIndexViewModel(ResortIndexFilterViewModel filter, List<ResortListDTO> resortList)
+    public List<ResortListDTO> List { get; }
+    public ResortIndexViewModel(ResortIndexFilterViewModel filter, List<ResortListDTO> list)
     {
         Filter = filter;
-        ResortList = resortList;
+        List = list;
     }
 }
