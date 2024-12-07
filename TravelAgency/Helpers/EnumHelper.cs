@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Reflection;
-using TravelAgency.Models;
 
 namespace TravelAgency.Helpers;
 
@@ -32,7 +31,7 @@ public static class EnumHelper
                                              .FirstOrDefault();
         return descriptionAttribute?.Description ?? enumValue.ToString();
     }
-    public static string GetDescription(this ResortType value)
+    public static string GetDescription<T>(this T value) where T : Enum
     {
         var field = value.GetType().GetField(value.ToString());
         var attribute = field?.GetCustomAttribute<DescriptionAttribute>();

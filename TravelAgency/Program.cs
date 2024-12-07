@@ -27,6 +27,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<CountryService>();
 builder.Services.AddTransient<ResortService>();
+builder.Services.AddTransient<AccommodationService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services
@@ -47,6 +48,8 @@ else
     app.UseHsts();
 }
 
+app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
@@ -61,6 +64,10 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "resort",
     pattern: "{controller=Resorts}/{action=Index}/{id?}")
+    .WithStaticAssets();
+app.MapControllerRoute(
+    name: "accommodation",
+    pattern: "{controller=Accommodations}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.MapRazorPages()
