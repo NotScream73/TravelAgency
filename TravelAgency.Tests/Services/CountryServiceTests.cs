@@ -18,7 +18,7 @@ namespace TravelAgency.Tests.Services
             var _context = new DataContext(options);
             var _service = new CountryService(_context);
 
-            _context.Country.AddRange(new List<Country>
+            _context.Countries.AddRange(new List<Country>
             {
                 new Country { Id = 1, Name = "Россия" },
                 new Country { Id = 2, Name = "Китай" }
@@ -45,7 +45,7 @@ namespace TravelAgency.Tests.Services
             var _context = new DataContext(options);
             var _service = new CountryService(_context);
 
-            _context.Country.AddRange(new List<Country>
+            _context.Countries.AddRange(new List<Country>
             {
                 new Country { Id = 1, Name = "Россия" },
                 new Country { Id = 2, Name = "Китай" }
@@ -69,7 +69,7 @@ namespace TravelAgency.Tests.Services
 
             var _context = new DataContext(options);
 
-            _context.Country.AddRange(new List<Country>
+            _context.Countries.AddRange(new List<Country>
             {
                 new Country { Id = 1, Name = "Россия" }
             });

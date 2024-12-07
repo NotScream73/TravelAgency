@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using TravelAgency.Data;
 using TravelAgency.Services;
 
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddTransient<CountryService>();
+builder.Services.AddTransient<ResortService>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddControllersWithViews();
 
@@ -36,6 +39,10 @@ app.MapStaticAssets();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Countries}/{action=Index}/{id?}")
+    .WithStaticAssets();
+app.MapControllerRoute(
+    name: "resort",
+    pattern: "{controller=Resorts}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.Run();

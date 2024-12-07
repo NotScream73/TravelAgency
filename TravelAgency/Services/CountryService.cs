@@ -15,12 +15,12 @@ namespace TravelAgency.Services
 
         public async Task<List<Country>> GetAllCountriesAsync()
         {
-            return await _context.Country.ToListAsync();
+            return await _context.Countries.ToListAsync();
         }
 
         public async Task<Country?> GetCountryByIdAsync(int id)
         {
-            return await _context.Country.FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Countries.FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<bool> CreateCountryAsync(Country country)
@@ -57,20 +57,20 @@ namespace TravelAgency.Services
 
         public async Task<bool> DeleteCountryAsync(int id)
         {
-            var country = await _context.Country.FindAsync(id);
+            var country = await _context.Countries.FindAsync(id);
             if (country == null)
             {
                 return false;
             }
 
-            _context.Country.Remove(country);
+            _context.Countries.Remove(country);
             await _context.SaveChangesAsync();
             return true;
         }
 
         private async Task<bool> CountryExistsAsync(int id)
         {
-            return await _context.Country.AnyAsync(c => c.Id == id);
+            return await _context.Countries.AnyAsync(c => c.Id == id);
         }
     }
 
