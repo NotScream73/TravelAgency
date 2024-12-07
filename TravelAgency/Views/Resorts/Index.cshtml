@@ -11,22 +11,22 @@
     <a class="btn btn-success" asp-action="Create">Добавить курорт</a>
 </p>
 
-@if (Model.ResortList.Count != 0)
+@if (Model.List.Count != 0)
 {
     <table class="table" style="width: 100%">
         <thead>
             <tr>
                 <th scope="col" style="width: 5%"></th>
                 <th scope="col">
-                    @Html.DisplayNameFor(_ => Model.ResortList[0].Name)
+                    @Html.DisplayNameFor(_ => Model.List[0].Name)
                 </th>
                 <th scope="col">
-                    @Html.DisplayNameFor(_ => Model.ResortList[0].Type)
+                    @Html.DisplayNameFor(_ => Model.List[0].Type)
                 </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.ResortList)
+            @foreach (var item in Model.List)
             {
                 <tr>
                     <th scope="row">
@@ -74,7 +74,7 @@
 else
 {
     <div>
-        Список курортов пуст
+        Список пуст
     </div>
 }
 

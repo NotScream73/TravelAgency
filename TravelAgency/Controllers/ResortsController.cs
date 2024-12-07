@@ -31,7 +31,7 @@ namespace TravelAgency.Controllers
 
             var viewModel = new ResortIndexViewModel(
                 filter: filter,
-                resortList: list
+                list: list
             );
 
             return View(viewModel);

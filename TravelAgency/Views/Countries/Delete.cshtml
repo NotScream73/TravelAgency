@@ -1,4 +1,4 @@
-﻿@model TravelAgency.Models.Country
+﻿@model TravelAgency.ViewModels.Countries.CountryDeleteViewModel
 
 @{
     ViewData["Title"] = "Удаление страны";
@@ -12,15 +12,15 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(_ => Model.Item.Name)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(_ => Model.Item.Name)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="@Model.Item.Id" />
         <input type="submit" value="Удалить" class="btn btn-danger" /> |
         <a asp-action="Index">Назад</a>
     </form>
