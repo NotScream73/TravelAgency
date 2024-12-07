@@ -2,34 +2,34 @@
 using TravelAgency.Helpers;
 using TravelAgency.Models.DTO;
 using TravelAgency.Services;
-using TravelAgency.ViewModels.Resorts;
+using TravelAgency.ViewModels.Accommodations;
 
 namespace TravelAgency.Controllers;
 
-public class ResortsController : Controller
+public class AccommodationsController : Controller
 {
-    private readonly ResortService _resortService;
+    private readonly AccommodationService _accommodationService;
 
-    public ResortsController(ResortService resortService)
+    public AccommodationsController(AccommodationService accommodationService)
     {
-        _resortService = resortService;
+        _accommodationService = accommodationService;
     }
 
-    // GET: Resorts
+    // GET: Accommodations
     public async Task<IActionResult> Index(string? name, int page = 0, int size = 5)
     {
-        var filter = new ResortIndexFilterViewModel()
+        var filter = new AccommodationIndexFilterViewModel()
         {
             Name = name,
             Page = page,
             Size = size
         };
 
-        (var list, var totalCount) = await _resortService.GetAllAsync(filter);
+        (var list, var totalCount) = await _accommodationService.GetAllAsync(filter);
 
         filter.TotalCount = totalCount;
 
-        var viewModel = new ResortIndexViewModel(
+        var viewModel = new AccommodationIndexViewModel(
             filter: filter,
             list: list
         );
@@ -37,10 +37,10 @@ public class ResortsController : Controller
         return View(viewModel);
     }
 
-    // GET: Resorts/Details/5
+    // GET: Accommodations/Details/5
     public async Task<IActionResult> Details(int? id)
     {
-        var resort = new ResortDetailsDTO();
+        var accommodation = new AccommodationDetailsDTO();
 
         try
         {
@@ -49,9 +49,9 @@ public class ResortsController : Controller
                 return NotFound();
             }
 
-            resort = await _resortService.GetByIdAsync(id.Value);
+            accommodation = await _accommodationService.GetByIdAsync(id.Value);
 
-            if (resort == null)
+            if (accommodation == null)
             {
                 return NotFound();
             }
@@ -61,21 +61,21 @@ public class ResortsController : Controller
             ModelState.AddModelError("", ex.Message);
         }
 
-        var viewModel = new ResortDetailsViewModel(
-            item: resort
+        var viewModel = new AccommodationDetailsViewModel(
+            item: accommodation
         );
 
         return View(viewModel);
     }
 
-    // GET: Resorts/Create
+    // GET: Accommodations/Create
     public IActionResult Create()
     {
-        var item = _resortService.GetForCreate();
+        var item = _accommodationService.GetForCreate();
 
         var typeOptions = EnumHelper.GetEnumSelectList(item.Type);
 
-        var viewModel = new ResortCreateViewModel(
+        var viewModel = new AccommodationCreateViewModel(
             item: item,
             typeOptions: typeOptions
         );
@@ -83,25 +83,27 @@ public class ResortsController : Controller
         return View(viewModel);
     }
 
-    // POST: Resorts/Create
+    // POST: Accommodations/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateAsync()
     {
-        var resortDto = new ResortCreateDTO();
+        var accommodationDto = new AccommodationCreateDTO();
         try
         {
             if (await TryUpdateModelAsync(
-                resortDto,
+                accommodationDto,
                 "Item",
                 i => i.Name,
                 i => i.Description,
+                i => i.Address,
+                i => i.PricePerNight,
                 i => i.Type
             ))
             {
-                await _resortService.CreateAsync(resortDto);
+                await _accommodationService.CreateAsync(accommodationDto);
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -110,20 +112,20 @@ public class ResortsController : Controller
             ModelState.AddModelError("", ex.Message);
         }
 
-        var typeOptions = EnumHelper.GetEnumSelectList(resortDto.Type);
+        var typeOptions = EnumHelper.GetEnumSelectList(accommodationDto.Type);
 
-        var viewModel = new ResortCreateViewModel(
-            item: resortDto,
+        var viewModel = new AccommodationCreateViewModel(
+            item: accommodationDto,
             typeOptions: typeOptions
         );
 
         return View(viewModel);
     }
 
-    // GET: Resorts/Edit/5
+    // GET: Accommodations/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
-        var resort = new ResortEditDTO();
+        var accommodation = new AccommodationEditDTO();
 
         try
         {
@@ -132,8 +134,8 @@ public class ResortsController : Controller
                 return NotFound();
             }
 
-            resort = await _resortService.GetForEditAsync(id.Value);
-            if (resort == null)
+            accommodation = await _accommodationService.GetForEditAsync(id.Value);
+            if (accommodation == null)
             {
                 return NotFound();
             }
@@ -143,36 +145,38 @@ public class ResortsController : Controller
             ModelState.AddModelError("", ex.Message);
         }
 
-        var typeOptions = EnumHelper.GetEnumSelectList(resort.Type);
+        var typeOptions = EnumHelper.GetEnumSelectList(accommodation.Type);
 
-        var viewModel = new ResortEditViewModel(
-            item: resort,
+        var viewModel = new AccommodationEditViewModel(
+            item: accommodation,
             typeOptions: typeOptions
         );
 
         return View(viewModel);
     }
 
-    // POST: Resorts/Edit/5
+    // POST: Accommodations/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id)
     {
-        var resortDto = new ResortEditDTO();
+        var accommodationDto = new AccommodationEditDTO();
         try
         {
             if (await TryUpdateModelAsync(
-                resortDto,
+                accommodationDto,
                 "Item",
                 i => i.Id,
                 i => i.Name,
                 i => i.Description,
+                i => i.Address,
+                i => i.PricePerNight,
                 i => i.Type
             ))
             {
-                await _resortService.UpdateAsync(resortDto);
+                await _accommodationService.UpdateAsync(accommodationDto);
                 return RedirectToAction("Details", new { id });
             }
         }
@@ -181,17 +185,17 @@ public class ResortsController : Controller
             ModelState.AddModelError("", ex.Message);
         }
 
-        var typeOptions = EnumHelper.GetEnumSelectList(resortDto.Type);
+        var typeOptions = EnumHelper.GetEnumSelectList(accommodationDto.Type);
 
-        var viewModel = new ResortEditViewModel(
-            item: resortDto,
+        var viewModel = new AccommodationEditViewModel(
+            item: accommodationDto,
             typeOptions: typeOptions
         );
 
-        return View(resortDto);
+        return View(accommodationDto);
     }
 
-    // GET: Resorts/Delete/5
+    // GET: Accommodations/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -199,32 +203,32 @@ public class ResortsController : Controller
             return NotFound();
         }
 
-        var resort = new ResortDeleteDTO();
+        var accommodation = new AccommodationDeleteDTO();
 
         try
         {
-            resort = await _resortService.GetForDeleteAsync(id.Value);
+            accommodation = await _accommodationService.GetForDeleteAsync(id.Value);
         }
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
         }
 
-        var viewModel = new ResortDeleteViewModel(
-            item: resort
+        var viewModel = new AccommodationDeleteViewModel(
+            item: accommodation
         );
 
         return View(viewModel);
     }
 
-    // POST: Resorts/Delete/5
+    // POST: Accommodations/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         try
         {
-            await _resortService.DeleteAsync(id);
+            await _accommodationService.DeleteAsync(id);
         }
         catch (Exception ex)
         {
