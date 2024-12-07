@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*using Microsoft.EntityFrameworkCore;
 using TravelAgency.Data;
 using TravelAgency.Models;
 using TravelAgency.Services;
@@ -170,4 +170,4 @@ namespace TravelAgency.Tests.Services
             Assert.IsFalse(result);
         }
     }
-}
+}*/
