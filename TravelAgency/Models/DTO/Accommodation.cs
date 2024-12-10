@@ -75,3 +75,8 @@ public class AccommodationListDTO : AccommodationDTO
     [DisplayName("Цена за 1 ночь, руб")]
     public decimal PricePerNight { get; set; }
 }
+
+public class AccommodationForSelectDTO : AccommodationDTO
+{
+    public int Id { get; set; }
+}

@@ -1,0 +1,125 @@
+﻿@model TravelAgency.ViewModels.Tours.TourDetailsViewModel
+
+@{
+    ViewData["Title"] = "Подробности тура";
+}
+
+<h1>Подробности тура @Model.Item.Name</h1>
+<hr />
+<div>
+    <div class="row">
+        <div class="panel panel-default col">
+            <div class="card">
+                <div class="card-body" style="width: 100%; height: auto;">
+                    <img src="@Model.Item.PhotoPath" style="width: 100%; height: auto; object-fit: cover;" />
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default col">
+            <div class="card">
+                <div class="card-header">
+                    Основная информация
+                </div>
+                <div class="card-body">
+                    <dt>
+                        @Html.DisplayNameFor(_ => Model.Item.Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(_ => Model.Item.Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(_ => Model.Item.Description)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(_ => Model.Item.Description)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(_ => Model.Item.StartDate)
+                    </dt>
+                    <dd>
+                        @Model.Item.StartDate.ToShortDateString()-@Model.Item.EndDate.ToShortDateString()
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(_ => Model.Item.Price)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(_ => Model.Item.Price)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(_ => Model.Item.Count)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(_ => Model.Item.Count)
+                    </dd>
+                </div>
+            </div>
+            <br />
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Курорт</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Страна</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Проживание</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <dt>
+                                @Html.DisplayNameFor(_ => Model.Item.ResortName)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(_ => Model.Item.ResortName)
+                            </dd>
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <dt>
+                                @Html.DisplayNameFor(_ => Model.Item.CountryName)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(_ => Model.Item.CountryName)
+                            </dd>
+                        </div>
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                            <dt>
+                                @Html.DisplayNameFor(_ => Model.Item.AccommodationName)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(_ => Model.Item.AccommodationName)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(_ => Model.Item.AccommodationAddress)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(_ => Model.Item.AccommodationAddress)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(_ => Model.Item.AccommodationPricePerNight)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(_ => Model.Item.AccommodationPricePerNight)
+                            </dd>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Item.Id">Изменить</a>
+        @:|
+    }
+    <a asp-action="Index">Назад</a>
+</div>
+
+@section Scripts{
+}

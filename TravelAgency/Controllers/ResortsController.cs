@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TravelAgency.Helpers;
 using TravelAgency.Models.DTO;
 using TravelAgency.Services;
@@ -6,6 +7,7 @@ using TravelAgency.ViewModels.Resorts;
 
 namespace TravelAgency.Controllers;
 
+[Authorize(Roles = "Admin, Manager")]
 public class ResortsController : Controller
 {
     private readonly ResortService _resortService;
@@ -188,7 +190,7 @@ public class ResortsController : Controller
             typeOptions: typeOptions
         );
 
-        return View(resortDto);
+        return View(viewModel);
     }
 
     // GET: Resorts/Delete/5

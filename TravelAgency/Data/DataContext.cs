@@ -9,6 +9,9 @@ public class DataContext : IdentityDbContext<User>
     public DbSet<Country> Countries { get; set; } = null!;
     public DbSet<Resort> Resorts { get; set; } = null!;
     public DbSet<Accommodation> Accommodations { get; set; } = null!;
+    public DbSet<Tour> Tours { get; set; } = null!;
+    public DbSet<Purchase> Purchases { get; set; } = null!;
+    public DbSet<TourPurchase> TourPurchases { get; set; } = null!;
 
     public DataContext(DbContextOptions<DataContext> options)
         : base(options)
@@ -29,5 +32,45 @@ public class DataContext : IdentityDbContext<User>
         builder.Entity<Accommodation>().ToTable("accommodation").HasKey(i => i.Id);
         builder.Entity<Accommodation>().Property(i => i.Id).UseIdentityColumn();
         builder.Entity<Accommodation>().HasIndex(i => i.Name).IsUnique();
+
+        builder.Entity<Tour>().ToTable("tour").HasKey(i => i.Id);
+        builder.Entity<Tour>().Property(i => i.Id).UseIdentityColumn();
+        builder.Entity<Tour>().HasIndex(i => i.Name).IsUnique();
+
+        builder.Entity<Tour>()
+            .HasOne(t => t.Country)
+            .WithMany()
+            .HasForeignKey(t => t.CountryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Tour>()
+            .HasOne(t => t.Accommodation)
+            .WithMany()
+            .HasForeignKey(t => t.AccommodationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Tour>()
+            .HasOne(t => t.Resort)
+            .WithMany()
+            .HasForeignKey(t => t.ResortId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Purchase>().ToTable("purchase").HasKey(i => i.Id);
+        builder.Entity<Purchase>().Property(i => i.Id).UseIdentityColumn();
+
+        builder.Entity<TourPurchase>().ToTable("tour_purchase").HasKey(i => i.Id);
+        builder.Entity<TourPurchase>().Property(i => i.Id).UseIdentityColumn();
+
+        builder.Entity<TourPurchase>()
+            .HasOne<Tour>()
+            .WithMany()
+            .HasForeignKey(tp => tp.TourId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<TourPurchase>()
+            .HasOne<Purchase>()
+            .WithMany()
+            .HasForeignKey(tp => tp.PurchaseId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

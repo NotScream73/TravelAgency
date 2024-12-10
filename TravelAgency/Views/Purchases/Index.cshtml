@@ -1,0 +1,125 @@
+﻿@using TravelAgency.Helpers
+@model TravelAgency.ViewModels.Purchases.PurchaseIndexViewModel
+
+@{
+    ViewData["Title"] = "Корзина";
+}
+
+<h1>Корзина</h1>
+<hr />
+@if (Model.List.Count != 0)
+{
+    <table class="table table-bordered" style="width: 100%">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 5%"></th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.List[0].TourName)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.List[0].Price)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.List[0].ProductCount)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.List)
+            {
+                <tr>
+                    <th scope="row">
+                        <a class="text increase-button" data-id="@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                            </svg>
+                        </a> |
+                        <a class="text decrease-button" data-id="@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-minus" viewBox="0 0 16 16">
+                                <path d="M5.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5" />
+                            </svg>
+                        </a>
+                    </th>
+                    <td>
+                        <a asp-controller="Tours" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(_ => item.TourName)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => item.Price)
+                    </td>
+                    <td class="purchase-count">
+                        @Html.DisplayFor(_ => item.ProductCount)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <form asp-action="Create">
+        <div class="form-group">
+            <input type="submit" value="Купить" class="btn btn-primary" />
+        </div>
+    </form>
+}
+else
+{
+    <div>
+        Корзина пуста
+    </div>
+}
+
+@section Head {
+    <style>
+        a.text:active,
+        a.text:hover,
+        a.text {
+            text-decoration: none;
+            color: #666;
+        }
+    </style>
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(document).on('click', '.increase-button', function () {
+            var r = $(this);
+            var itemId = $(this).data('id');
+            $.ajax({
+                url: '@Url.Action("Increase", "Purchases")',
+                type: 'POST',
+                data: { id: itemId },
+                success: function (response) {
+                    if (response.count){
+                        var row = r.closest('tr');
+
+                        var purchaseCountCell = row.find('.purchase-count');
+
+                        purchaseCountCell.text(response.count);
+                    }
+                },
+                error: function () {
+                    alert('Ошибка при покупке. Попробуйте снова.');
+                }
+            });
+        });
+        $(document).on('click', '.decrease-button', function () {
+            var r = $(this);
+            var itemId = r.data('id');
+            $.ajax({
+                url: '@Url.Action("Decrease", "Purchases")',
+                type: 'POST',
+                data: { id: itemId },
+                success: function (response) {
+                    var row = r.closest('tr');
+                    if (response.count === 0){
+                        r.closest('tr').remove();
+                    } else {
+                        var purchaseCountCell = row.find('.purchase-count');
+                        purchaseCountCell.text(response.count);
+                    }
+                },
+                error: function () {
+                    alert('Ошибка при покупке. Попробуйте снова.');
+                }
+            });
+        });
+    </script>
+}
