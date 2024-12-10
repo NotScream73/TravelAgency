@@ -33,3 +33,8 @@ public class CountryListDTO : CountryDTO
 {
     public int Id { get; set; }
 }
+
+public class CountryForSelectDTO : CountryDTO
+{
+    public int Id { get; set; }
+}

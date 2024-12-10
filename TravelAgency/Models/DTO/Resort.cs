@@ -47,3 +47,8 @@ public class ResortListDTO : ResortDTO
     [DisplayName("Тип курорта")]
     public ResortType Type { get; set; }
 }
+
+public class ResortForSelectDTO : ResortDTO
+{
+    public int Id { get; set; }
+}

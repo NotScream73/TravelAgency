@@ -1,0 +1,89 @@
+﻿@using TravelAgency.Helpers
+@model TravelAgency.ViewModels.Purchases.PurchaseListViewModel
+
+@{
+    ViewData["Title"] = "Список покупок";
+}
+
+<h1>Список покупок</h1>
+<hr />
+@if (Model.List.Count != 0)
+{
+    <table class="table table-bordered" style="width: 100%">
+        <thead>
+            <tr>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.List[0].Id)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.List[0].Status)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.List[0].TotalPrice)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.List[0].ProductCount)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.List[0].Created)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.List)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Заказ №@Html.DisplayFor(_ => item.Id)</a>
+                    </td>
+                    <td>
+                        @item.Status.GetDescription()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => item.TotalPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => item.ProductCount)
+                    </td>
+                    <td>
+                        @item.Created.DateTime.ToShortDateString()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.Filter.Page == 0 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("List", "Purchases", new { Name = Model.Filter.UserId, Page = 0, Size = Model.Filter.Size })" tabindex="-1">Первая</a>
+            </li>
+            @for (int i = 0; i <= Math.Ceiling((double)Model.Filter.TotalCount / Model.Filter.Size) - 1; i++)
+            {
+                <li class="page-item @(i == Model.Filter.Page ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("List", "Purchases", new { Name = Model.Filter.UserId, Page = i, Size = Model.Filter.Size })">@(i + 1)</a>
+                </li>
+            }
+            <li class="page-item @(Model.Filter.Page == Math.Ceiling((double)Model.Filter.TotalCount / Model.Filter.Size) - 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("List", "Purchases", new { Name = Model.Filter.UserId, Page = Math.Ceiling((double)Model.Filter.TotalCount / Model.Filter.Size), Size = Model.Filter.Size })">Последняя</a>
+            </li>
+        </ul>
+    </nav>
+}
+else
+{
+    <div>
+        Список пуст
+    </div>
+}
+
+@section Head {
+    <style>
+        a.text:active,
+        a.text:hover,
+        a.text {
+            text-decoration: none;
+            color: #666;
+        }
+    </style>
+}

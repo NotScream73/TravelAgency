@@ -48,6 +48,19 @@ public class ResortService
         return resort;
     }
 
+    public async Task<List<ResortForSelectDTO>> GetAllForSelectAsync()
+    {
+        return
+            await _dataContext.Resorts
+                .Select(i => new ResortForSelectDTO
+                {
+                    Id = i.Id,
+                    Name = i.Name
+                })
+                .OrderBy(i => i.Name)
+                .ToListAsync();
+    }
+
     public ResortCreateDTO GetForCreate()
     {
         return new ResortCreateDTO
