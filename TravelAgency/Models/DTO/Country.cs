@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TravelAgency.Models.DTO;
 
-
 public abstract class CountryDTO
 {
     [DisplayName("Название")]
@@ -31,6 +30,11 @@ public class CountryDeleteDTO : CountryDTO
 }
 
 public class CountryListDTO : CountryDTO
+{
+    public int Id { get; set; }
+}
+
+public class CountryForSelectDTO : CountryDTO
 {
     public int Id { get; set; }
 }

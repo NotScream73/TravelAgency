@@ -1,0 +1,153 @@
+﻿@using TravelAgency.Helpers
+@model TravelAgency.ViewModels.Purchases.PurchaseDetailsViewModel
+
+@{
+    ViewData["Title"] = "Подробности заказа";
+}
+
+<h1>Подробности заказа @Model.Item.Id</h1>
+<hr />
+<div class="panel panel-default col">
+    <div class="card">
+        <div class="card-header">
+            Основная информация
+        </div>
+        <div class="card-body">
+            <dt>
+                @Html.DisplayNameFor(_ => Model.Item.Id)
+            </dt>
+            <dd>
+                @Html.DisplayFor(_ => Model.Item.Id)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(_ => Model.Item.Created)
+            </dt>
+            <dd>
+                @Html.DisplayFor(_ => Model.Item.Created)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(_ => Model.Item.Status)
+            </dt>
+            <dd>
+                @Model.Item.Status.GetDescription()
+            </dd>
+        </div>
+    </div>
+</div>
+<br />
+@if (Model.TourPurchaseList.Count != 0)
+{
+    <table class="table table-bordered" style="width: 100%">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 5%">
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.TourPurchaseList[0].TourName)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.TourPurchaseList[0].Price)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(_ => Model.TourPurchaseList[0].ProductCount)
+                </th>
+                <th scope="col">
+                    Итоговая стоимость
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TourPurchaseList)
+            {
+                <tr>
+                    <th scope="row">
+                        <img src="@item.PhotoPath" style="width: 100%; height: auto; object-fit: cover;" />
+                    </th>
+                    <td>
+                        <a asp-controller="Tours" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(_ => item.TourName)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => item.Price)
+                    </td>
+                    <td class="purchase-count">
+                        @Html.DisplayFor(_ => item.ProductCount)
+                    </td>
+                    <td>
+                        @(item.Price * item.ProductCount)
+                    </td>
+                </tr>
+            }
+            <tr>
+                <th scope="row" colspan="4" class="text-end">
+                    Итого
+                </th>
+                <td>
+                    @(Model.Item.TotalPrice) руб.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        Корзина пуста
+    </div>
+}
+
+@section Head {
+    <style>
+        a.text:active,
+        a.text:hover,
+        a.text {
+            text-decoration: none;
+            color: #666;
+        }
+    </style>
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(document).on('click', '.increase-button', function () {
+            var r = $(this);
+            var itemId = $(this).data('id');
+            $.ajax({
+                url: '@Url.Action("Increase", "Purchases")',
+                type: 'POST',
+                data: { id: itemId },
+                success: function (response) {
+                    if (response.count){
+                        var row = r.closest('tr');
+
+                        var purchaseCountCell = row.find('.purchase-count');
+
+                        purchaseCountCell.text(response.count);
+                    }
+                },
+                error: function () {
+                    alert('Ошибка при покупке. Попробуйте снова.');
+                }
+            });
+        });
+        $(document).on('click', '.decrease-button', function () {
+            var r = $(this);
+            var itemId = r.data('id');
+            $.ajax({
+                url: '@Url.Action("Decrease", "Purchases")',
+                type: 'POST',
+                data: { id: itemId },
+                success: function (response) {
+                    var row = r.closest('tr');
+                    if (response.count === 0){
+                        r.closest('tr').remove();
+                    } else {
+                        var purchaseCountCell = row.find('.purchase-count');
+                        purchaseCountCell.text(response.count);
+                    }
+                },
+                error: function () {
+                    alert('Ошибка при покупке. Попробуйте снова.');
+                }
+            });
+        });
+    </script>
+}

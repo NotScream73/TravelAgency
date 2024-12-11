@@ -1,0 +1,50 @@
+﻿@model TravelAgency.ViewModels.Accommodations.AccommodationCreateViewModel
+
+@{
+    ViewData["Title"] = "Добавление проживания";
+}
+
+<h1>Добавление проживания</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.Name" class="control-label"></label>
+                <input asp-for="@Model.Item.Name" class="form-control" />
+                <span asp-validation-for="@Model.Item.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.Description" class="control-label"></label>
+                <input asp-for="@Model.Item.Description" class="form-control" />
+                <span asp-validation-for="@Model.Item.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.Address" class="control-label"></label>
+                <input asp-for="@Model.Item.Address" class="form-control" />
+                <span asp-validation-for="@Model.Item.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.PricePerNight" class="control-label"></label>
+                <input type="number" asp-for="@Model.Item.PricePerNight" class="form-control" />
+                <span asp-validation-for="@Model.Item.PricePerNight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Item.Type)
+                @Html.DropDownListFor(m => m.Item.Type, Model.TypeOptions, null, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

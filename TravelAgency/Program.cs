@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(connectionString));
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDefaultIdentity<User>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -27,6 +27,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<CountryService>();
 builder.Services.AddTransient<ResortService>();
+builder.Services.AddTransient<AccommodationService>();
+builder.Services.AddTransient<TourService>();
+builder.Services.AddTransient<PurchaseService>();
+builder.Services.AddTransient<CommentService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services
@@ -47,6 +51,8 @@ else
     app.UseHsts();
 }
 
+app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
@@ -56,11 +62,23 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
+    pattern: "{controller=Tours}/{action=Index}/{id?}")
+    .WithStaticAssets();
+app.MapControllerRoute(
+    name: "country",
     pattern: "{controller=Countries}/{action=Index}/{id?}")
     .WithStaticAssets();
 app.MapControllerRoute(
     name: "resort",
     pattern: "{controller=Resorts}/{action=Index}/{id?}")
+    .WithStaticAssets();
+app.MapControllerRoute(
+    name: "accommodation",
+    pattern: "{controller=Accommodations}/{action=Index}/{id?}")
+    .WithStaticAssets();
+app.MapControllerRoute(
+    name: "purchase",
+    pattern: "{controller=Purchases}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.MapRazorPages()

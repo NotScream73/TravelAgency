@@ -1,0 +1,47 @@
+﻿@using TravelAgency.Helpers
+@model TravelAgency.ViewModels.Accommodations.AccommodationDetailsViewModel
+
+@{
+    ViewData["Title"] = "Подробности проживания";
+}
+
+<h1>Подробности проживания @Model.Item.Name</h1>
+<hr />
+<div>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(_ => Model.Item.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(_ => Model.Item.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(_ => Model.Item.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(_ => Model.Item.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(_ => Model.Item.Address)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(_ => Model.Item.Address)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(_ => Model.Item.PricePerNight)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(_ => Model.Item.PricePerNight)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(_ => Model.Item.Type)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Item.Type.GetDescription()
+        </dd>
+    </dl>
+</div>
+<div> 
+    <a asp-action="Edit" asp-route-id="@Model.Item.Id">Изменить</a> |
+    <a asp-action="Index">Назад</a>
+</div>

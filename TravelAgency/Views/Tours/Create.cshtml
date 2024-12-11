@@ -1,0 +1,72 @@
+﻿@model TravelAgency.ViewModels.Tours.TourCreateViewModel
+
+@{
+    ViewData["Title"] = "Добавление тура";
+}
+
+<h1>Добавление тура</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.Name" class="control-label"></label>
+                <input asp-for="@Model.Item.Name" class="form-control" />
+                <span asp-validation-for="@Model.Item.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.Description" class="control-label"></label>
+                <input asp-for="@Model.Item.Description" class="form-control" />
+                <span asp-validation-for="@Model.Item.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.Price" class="control-label"></label>
+                <input type="number" asp-for="@Model.Item.Price" class="form-control" />
+                <span asp-validation-for="@Model.Item.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.Count" class="control-label"></label>
+                <input type="number" asp-for="@Model.Item.Count" class="form-control" />
+                <span asp-validation-for="@Model.Item.Count" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.StartDate" class="control-label"></label>
+                <input type="date" asp-for="@Model.Item.StartDate" class="form-control" />
+                <span asp-validation-for="@Model.Item.StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item.EndDate" class="control-label"></label>
+                <input type="date" asp-for="@Model.Item.EndDate" class="form-control" />
+                <span asp-validation-for="@Model.Item.EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="uploadedFile" class="control-label">Изображение</label>
+                <input class="form-control" accept="image/*" type="file" name="uploadedFile" id="uploadedFile">
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Item.CountryId)
+                @Html.DropDownListFor(m => m.Item.CountryId, Model.CountryOptions, null, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Item.AccommodationId)
+                @Html.DropDownListFor(m => m.Item.AccommodationId, Model.AccommodationOptions, null, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Item.ResortId)
+                @Html.DropDownListFor(m => m.Item.ResortId, Model.ResortOptions, null, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
