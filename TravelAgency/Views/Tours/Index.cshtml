@@ -7,12 +7,6 @@
 <div class="container my-4">
     <h1>Список туров</h1>
     <hr />
-    <div class="row g-3 mb-4">
-        <div class="col-12">
-            <label for="nameFilter" class="form-label">Название тура:</label>
-            <input type="text" id="nameFilter" class="form-control" placeholder="Введите название">
-        </div>
-    </div>
     @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
     {
         <p>
