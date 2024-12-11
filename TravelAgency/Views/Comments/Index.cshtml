@@ -1,0 +1,77 @@
+﻿@model TravelAgency.ViewModels.Comments.CommentIndexViewModel
+
+@{
+    ViewData["Title"] = $"Комментарии к туру \"{Model.Item.TourName}\"";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<form asp-action="Index">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="@Model.Item.Message" class="control-label"></label>
+        <input asp-for="@Model.Item.Message" class="form-control" />
+        <span asp-validation-for="@Model.Item.Message" class="text-danger"></span>
+    </div>
+    <input asp-for="@Model.Item.TourId" style="display: none;" />
+    <div class="form-group">
+        @Html.LabelFor(model => model.Item.Score)
+        @Html.DropDownListFor(m => m.Item.Score, new SelectList(Enumerable.Range(1, 5)), null, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Сохранить" class="btn btn-primary" />
+    </div>
+</form>
+@if (Model.List.Count != 0)
+{
+    <ul>
+        @foreach (var comment in Model.List)
+        {
+            <li>
+                <strong>@comment.UserName</strong> (@comment.Score):
+                <p>@comment.Message</p>
+                @if (!User.IsInRole("User"))
+                {
+                    <form asp-action="DeleteComment" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@comment.Id" />
+                        <button type="submit">Удалить</button>
+                    </form>
+                }
+            </li>
+        }
+    </ul>
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.Filter.Page == 0 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", "Comments", new { TourId = Model.Filter.TourId, Page = 0, Size = Model.Filter.Size })" tabindex="-1">Первая</a>
+            </li>
+            @for (int i = 0; i <= Math.Ceiling((double)Model.Filter.TotalCount / Model.Filter.Size) - 1; i++)
+            {
+                <li class="page-item @(i == Model.Filter.Page ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", "Comments", new { TourId = Model.Filter.TourId, Page = i, Size = Model.Filter.Size })">@(i + 1)</a>
+                </li>
+            }
+            <li class="page-item @(Model.Filter.Page == Math.Ceiling((double)Model.Filter.TotalCount / Model.Filter.Size) - 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", "Comments", new { TourId = Model.Filter.TourId, Page = Math.Ceiling((double)Model.Filter.TotalCount / Model.Filter.Size), Size = Model.Filter.Size })">Последняя</a>
+            </li>
+        </ul>
+    </nav>
+}
+else
+{
+    <div>
+        Список пуст
+    </div>
+}
+
+@section Head {
+    <style>
+        a.text:active,
+        a.text:hover,
+        a.text {
+            text-decoration: none;
+            color: #666;
+        }
+    </style>
+}

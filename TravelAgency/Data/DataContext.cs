@@ -12,6 +12,7 @@ public class DataContext : IdentityDbContext<User>
     public DbSet<Tour> Tours { get; set; } = null!;
     public DbSet<Purchase> Purchases { get; set; } = null!;
     public DbSet<TourPurchase> TourPurchases { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; } = null!;
 
     public DataContext(DbContextOptions<DataContext> options)
         : base(options)
@@ -71,6 +72,21 @@ public class DataContext : IdentityDbContext<User>
             .HasOne<Purchase>()
             .WithMany()
             .HasForeignKey(tp => tp.PurchaseId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Comment>().ToTable("comment").HasKey(i => i.Id);
+        builder.Entity<Comment>().Property(i => i.Id).UseIdentityColumn();
+
+        builder.Entity<Comment>()
+            .HasOne(i => i.Tour)
+            .WithMany()
+            .HasForeignKey(tp => tp.TourId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Comment>()
+            .HasOne(i => i.User)
+            .WithMany()
+            .HasForeignKey(tp => tp.UserId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TravelAgency.Data;
@@ -11,9 +12,11 @@ using TravelAgency.Data;
 namespace TravelAgency.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241210152302_AddComment")]
+    partial class AddComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,14 +209,18 @@ namespace TravelAgency.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Message")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasColumnType("text")
-                        .HasColumnName("message");
+                        .HasColumnName("description");
 
                     b.Property<int>("Score")
                         .HasColumnType("integer")
                         .HasColumnName("score");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
 
                     b.Property<int>("TourId")
                         .HasColumnType("integer")
@@ -542,21 +549,17 @@ namespace TravelAgency.Data.Migrations
 
             modelBuilder.Entity("TravelAgency.Models.Comment", b =>
                 {
-                    b.HasOne("TravelAgency.Models.Tour", "Tour")
+                    b.HasOne("TravelAgency.Models.Tour", null)
                         .WithMany()
                         .HasForeignKey("TourId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TravelAgency.Models.User", "User")
+                    b.HasOne("TravelAgency.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Tour");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TravelAgency.Models.Tour", b =>

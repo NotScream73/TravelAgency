@@ -22,8 +22,27 @@ public class TourService
     public async Task<(List<TourListDTO> list, int totalCount)> GetAllAsync(TourIndexFilterViewModel filter)
     {
         var query =
-            _dataContext.Tours
-                .ProjectTo<TourListDTO>(_mapper.ConfigurationProvider);
+            (
+                from t in _dataContext.Tours
+                join co in _dataContext.Countries on t.CountryId equals co.Id
+                join r in _dataContext.Resorts on t.ResortId equals r.Id
+                select new TourListDTO
+                {
+                    Count = t.Count,
+                    CountryName = co.Name,
+                    EndDate = t.EndDate,
+                    Id = t.Id,
+                    Name = t.Name,
+                    PhotoPath = t.PhotoPath,
+                    Price = t.Price,
+                    ResortName = r.Name,
+                    StartDate = t.StartDate,
+                    Score = _dataContext.Comments.Where(i => i.TourId == t.Id).Count() != 0 ? (double)_dataContext.Comments.Where(i => i.TourId == t.Id).Sum(i => i.Score) / _dataContext.Comments.Where(i => i.TourId == t.Id).Count() : 0
+                }
+            );
+
+        _dataContext.Tours
+            .ProjectTo<TourListDTO>(_mapper.ConfigurationProvider);
 
         if (!string.IsNullOrEmpty(filter.Name))
         {

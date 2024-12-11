@@ -149,4 +149,5 @@ public class TourListDTO : TourDTO
     public decimal Price { get; set; }
     [DisplayName("Количество билетов")]
     public int Count { get; set; }
+    public double Score { get; set; }
 }

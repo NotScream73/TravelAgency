@@ -30,6 +30,7 @@ builder.Services.AddTransient<ResortService>();
 builder.Services.AddTransient<AccommodationService>();
 builder.Services.AddTransient<TourService>();
 builder.Services.AddTransient<PurchaseService>();
+builder.Services.AddTransient<CommentService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services

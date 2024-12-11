@@ -113,6 +113,9 @@
     </div>
 </div>
 <div>
+    <a class="btn btn-primary" asp-action="Index" asp-controller="Comments" asp-route-tourId="@Model.Item.Id">Комментарии</a>
+</div>
+<div>
     @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
     {
         <a asp-action="Edit" asp-route-id="@Model.Item.Id">Изменить</a>
